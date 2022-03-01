@@ -51,6 +51,10 @@ class Service {
       value: value,
     };
   }
+
+  getStat(fileName: string): Promise<string | null> {
+    return this.redisInit.getValue(fileName);
+  }
 }
 
 export default Service;
