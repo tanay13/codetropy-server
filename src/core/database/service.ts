@@ -11,8 +11,14 @@ export const ifTeam = async (teamName: string): Promise<boolean> => {
 };
 
 export const saveTeam = async (teamName: string): Promise<void> => {
-  const team = new Team({
-    name: teamName,
-  });
-  await team.save();
+  console.log(teamName);
+
+  try {
+    const team = new Team({
+      name: teamName,
+    });
+    await team.save();
+  } catch (e) {
+    console.log(e);
+  }
 };
