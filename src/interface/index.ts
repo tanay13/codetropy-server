@@ -12,3 +12,7 @@ export interface IReturnObject {
 export interface IConfig {
   dbConfig: IRedisObject;
 }
+
+export interface ITeam {
+  name: string;
+}
