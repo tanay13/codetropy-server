@@ -8,32 +8,40 @@ class Service {
     this.redisInit = new RedisSetup(config.dbConfig);
   }
 
-  async setStat(filename: string, value: number): Promise<IReturnObject> {
+  async setStat(
+    teamname: string,
+    filename: string,
+    value: number
+  ): Promise<IReturnObject> {
     // DB call
-    let prevVal = await this.redisInit.getValue(filename);
-    let prevTotal = await this.redisInit.getValue("total");
+    let prevVal = await this.redisInit.getValue(teamname, filename);
+
+    let prevTotal = await this.redisInit.getValue(teamname, "total");
+
     let prevValInt;
     let prevTotalInt = 0;
 
     let totalData: string;
 
-    if (prevVal != null) {
-      prevValInt = parseInt(prevVal);
+    if (prevVal[0] != null) {
+      prevValInt = parseInt(prevVal[0]);
     } else {
       prevValInt = 0;
     }
 
-    if (prevTotal != null) prevTotalInt = parseInt(prevTotal);
+    if (prevTotal[0] != null) prevTotalInt = parseInt(prevTotal[0]);
 
     if (prevValInt < value) {
       let increament = value - prevValInt;
       totalData = await this.redisInit.setValue(
+        teamname,
         "total",
         prevTotalInt + increament
       );
     } else {
       let decreament = prevValInt - value;
       totalData = await this.redisInit.setValue(
+        teamname,
         "total",
         prevTotalInt - decreament
       );
@@ -41,7 +49,7 @@ class Service {
 
     console.log("Values written in key ['Total']");
 
-    const response = await this.redisInit.setValue(filename, value);
+    const response = await this.redisInit.setValue(teamname, filename, value);
 
     console.log(`Values written in key[${filename}]`);
 
@@ -52,8 +60,8 @@ class Service {
     };
   }
 
-  getStat(fileName: string): Promise<string | null> {
-    return this.redisInit.getValue(fileName);
+  getStat(teamname: string, fileName: string): Promise<string[]> {
+    return this.redisInit.getValue(teamname, fileName);
   }
 }
 

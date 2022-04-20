@@ -33,13 +33,16 @@ app.get("/", (_, res: Response) => {
   });
 });
 
-app.get("/stream", (_, res: Response) => {
-  sendData(res, service);
+app.get("/stream/:teamname", (req, res: Response) => {
+  const teamname = req.params.teamname;
+
+  sendData(teamname, res, service);
 });
 
-app.post("/data", async (req: Request, res: Response) => {
+app.post("/data/:teamName", async (req: Request, res: Response) => {
   const data: IReturnObject = req.body;
-  const dataToSend = await service.setStat(data.fileName, data.value);
+  const teamname = req.params.teamName;
+  const dataToSend = await service.setStat(teamname, data.fileName, data.value);
   console.log(data);
   console.log(dataToSend);
 });

@@ -23,11 +23,11 @@ class RedisSetup {
     });
   }
 
-  setValue(filename: string, value: number): Promise<string> {
+  setValue(teamname: string, filename: string, value: number): Promise<string> {
     var val = value.toString();
 
     return new Promise((resolve) => {
-      this.redisClient.set(filename, val, (err, reply) => {
+      this.redisClient.hmset(teamname, { [filename]: val }, (err, reply) => {
         if (err) {
           console.log(err);
         }
@@ -35,9 +35,9 @@ class RedisSetup {
       resolve(val);
     });
   }
-  getValue(filename: string): Promise<string | null> {
+  getValue(teamname: string, filename: string): Promise<string[]> {
     return new Promise((resolve) => {
-      this.redisClient.get(filename, (err, val) => {
+      this.redisClient.hmget(teamname, filename, (err, val) => {
         if (err) {
           console.log(err);
         }
